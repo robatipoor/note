@@ -84,9 +84,7 @@ fn main() {
         }
     }
 }
-fn note_path_file() -> PathBuf {
-    dirs::home_dir().unwrap().join(Path::new("note"))
-}
+
 fn del_line(file: &mut File, line: Range<i32>) {
     let bf: BufReader<File> = BufReader::new(file.try_clone().unwrap());
     let v: Vec<String> = bf.lines().map(|x| x.unwrap()).collect();
@@ -200,4 +198,12 @@ pub fn write_line(file: &mut File, ss: &str) {
 fn count_line(file: File) -> usize {
     let f: BufReader<File> = BufReader::new(file);
     f.lines().count()
+}
+#[cfg(target_os = "windows")]
+fn note_path_file() -> PathBuf {
+    dirs::home_dir().unwrap().join(Path::new("note"))
+}
+
+fn note_path_file() -> PathBuf {
+    dirs::home_dir().unwrap().join(Path::new(".note"))
 }
