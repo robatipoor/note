@@ -5,9 +5,9 @@ use colored::*;
 use regex::Regex;
 use std::env;
 use std::fs::File;
-use std::io::SeekFrom;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
+use std::io::SeekFrom;
 use std::io::{stdin, BufReader, Read};
 use std::ops::Range;
 use std::path::Path;
@@ -18,7 +18,7 @@ mod test;
 const FILE: &'static str = concat!(env!("HOME"), "/.note");
 
 lazy_static! {
-    static ref RE: Regex = Regex::new(r"(\d+)\.\.(\d*)").unwrap();
+    static ref RE: Regex = Regex::new(r"[(\d+)(\.{2})(\d*)]").unwrap();
 }
 
 fn main() {
@@ -66,12 +66,12 @@ fn main() {
     let mut file: File = open_file(FILE).unwrap();
     if let Some(r) = matches.value_of("read") {
         for i in parse_str(r).unwrap() {
-            println!("{}",read_line(&mut file, i).expect("fu"))
+            println!("{}", read_line(&mut file, i).expect("not exist !"))
         }
     } else if let Some(w) = matches.value_of("write") {
         write_line(&mut file, w);
     } else if let Some(d) = matches.value_of("delete") {
-        del_line(&mut file, parse_str(d).unwrap());
+        del_line(&mut file, parse_str(d).expect("parse error !"));
     } else if let Some(a) = matches.value_of("append") {
         write_line(&mut file, a.trim());
     } else if matches.is_present("stdin") {
@@ -95,11 +95,13 @@ fn del_line(file: &mut File, line: Range<i32>) {
             out.push(s.clone());
         }
     }
-    let mut wfile: File = File::create(FILE).unwrap();
+    file.set_len(0).unwrap();
+    file.seek(SeekFrom::Start(0)).unwrap();
     for l in out.iter() {
-        writeln!(wfile, "{}", l).unwrap();
+        writeln!(file, "{}", l).unwrap();
     }
-    wfile.flush().unwrap();
+    file.flush().unwrap();
+    file.seek(SeekFrom::Start(0)).unwrap();
 }
 
 fn parse_str(s: &str) -> Option<Range<i32>> {
@@ -131,6 +133,7 @@ fn parse_str(s: &str) -> Option<Range<i32>> {
         if start <= stop && b == 2 {
             return Some(start..stop + 1);
         } else {
+            println!("not exist line");
             return None;
         }
     } else if let Ok(i) = s.parse::<i32>() {
