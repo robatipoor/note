@@ -4,11 +4,9 @@ use clap::{App, Arg};
 use colored::*;
 use regex::Regex;
 use std::env;
-use std::fs::File;
-use std::fs::OpenOptions;
+use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
-use std::io::SeekFrom;
-use std::io::{stdin, BufReader, Read};
+use std::io::{stdin, BufReader, Read, SeekFrom};
 use std::ops::Range;
 use std::path::{Path, PathBuf};
 
@@ -64,6 +62,7 @@ fn main() {
     let mut file: File = open_file(note_path_file()).unwrap();
     if let Some(r) = matches.value_of("read") {
         let max = count_line(file.try_clone().unwrap()) as i32;
+        file.seek(SeekFrom::Start(0)).unwrap();
         for i in parse_str(max, r).unwrap() {
             print!("{}", read_line(&mut file, i).expect("not exist !"))
         }
@@ -71,6 +70,7 @@ fn main() {
         write_line(&mut file, w);
     } else if let Some(d) = matches.value_of("delete") {
         let max = count_line(file.try_clone().unwrap()) as i32;
+        file.seek(SeekFrom::Start(0)).unwrap();
         del_line(&mut file, parse_str(max, d).expect("parse error !"));
     } else if let Some(a) = matches.value_of("append") {
         write_line(&mut file, a.trim());
