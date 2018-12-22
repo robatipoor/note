@@ -18,7 +18,7 @@ mod test;
 const FILE: &'static str = concat!(env!("HOME"), "/.note");
 
 lazy_static! {
-    static ref RE: Regex = Regex::new(r"[(\d+)(\.{2})(\d*)]").unwrap();
+    static ref RE: Regex = Regex::new(r"((\d+)(\.{2})(\d*))").unwrap();
 }
 
 fn main() {
@@ -66,7 +66,7 @@ fn main() {
     let mut file: File = open_file(FILE).unwrap();
     if let Some(r) = matches.value_of("read") {
         for i in parse_str(r).unwrap() {
-            println!("{}", read_line(&mut file, i).expect("not exist !"))
+            print!("{}", read_line(&mut file, i).expect("not exist !"))
         }
     } else if let Some(w) = matches.value_of("write") {
         write_line(&mut file, w);
