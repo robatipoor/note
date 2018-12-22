@@ -30,14 +30,14 @@ fn read_line_test() {
 
 #[test]
 fn parse_str_test() {
-    assert_eq!(parse_str("1..4").unwrap(), 1..5);
-    assert_eq!(parse_str("10..2"), None);
-    assert_eq!(parse_str("1 .."), None);
-    assert_eq!(parse_str("1 ..4"), None);
-    assert_eq!(parse_str("2..7"), Some(2..8));
-    assert_eq!(parse_str("10..2"), None);
-    // assert_eq!(parse_str("3..").unwrap(), 3..count_line() as i32 );
-    assert_eq!(parse_str("4").unwrap(), 4..5);
+    assert_eq!(parse_str(2,"1..4").unwrap(), 1..5);
+    assert_eq!(parse_str(2,"10..2"), None);
+    assert_eq!(parse_str(2,"1 .."), None);
+    assert_eq!(parse_str(2,"1 ..4"), None);
+    assert_eq!(parse_str(2,"2..7"), Some(2..8));
+    assert_eq!(parse_str(2,"10..2"), None);
+    assert_eq!(parse_str(10,"3..").unwrap(), 3..11);
+    assert_eq!(parse_str(1,"4").unwrap(), 4..5);
 }
 #[test]
 fn count_line_test() {

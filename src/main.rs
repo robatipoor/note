@@ -10,12 +10,10 @@ use std::io::prelude::*;
 use std::io::SeekFrom;
 use std::io::{stdin, BufReader, Read};
 use std::ops::Range;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 #[cfg(test)]
 mod test;
-
-const FILE: &'static str = concat!(env!("HOME"), "/.note");
 
 lazy_static! {
     static ref RE: Regex = Regex::new(r"((\d+)(\.{2})(\d*))").unwrap();
@@ -63,15 +61,17 @@ fn main() {
                 .takes_value(true),
         )
         .get_matches();
-    let mut file: File = open_file(FILE).unwrap();
+    let mut file: File = open_file(note_path_file()).unwrap();
     if let Some(r) = matches.value_of("read") {
-        for i in parse_str(r).unwrap() {
+        let max = count_line(file.try_clone().unwrap()) as i32;
+        for i in parse_str(max, r).unwrap() {
             print!("{}", read_line(&mut file, i).expect("not exist !"))
         }
     } else if let Some(w) = matches.value_of("write") {
         write_line(&mut file, w);
     } else if let Some(d) = matches.value_of("delete") {
-        del_line(&mut file, parse_str(d).expect("parse error !"));
+        let max = count_line(file.try_clone().unwrap()) as i32;
+        del_line(&mut file, parse_str(max, d).expect("parse error !"));
     } else if let Some(a) = matches.value_of("append") {
         write_line(&mut file, a.trim());
     } else if matches.is_present("stdin") {
@@ -84,7 +84,9 @@ fn main() {
         }
     }
 }
-
+fn note_path_file() -> PathBuf {
+    dirs::home_dir().unwrap().join(Path::new("note"))
+}
 fn del_line(file: &mut File, line: Range<i32>) {
     let bf: BufReader<File> = BufReader::new(file.try_clone().unwrap());
     let v: Vec<String> = bf.lines().map(|x| x.unwrap()).collect();
@@ -104,7 +106,7 @@ fn del_line(file: &mut File, line: Range<i32>) {
     file.seek(SeekFrom::Start(0)).unwrap();
 }
 
-fn parse_str(s: &str) -> Option<Range<i32>> {
+fn parse_str(max_line: i32, s: &str) -> Option<Range<i32>> {
     if RE.is_match(s) {
         let mut num = String::new();
         let mut start = 0;
@@ -125,7 +127,7 @@ fn parse_str(s: &str) -> Option<Range<i32>> {
             stop = x;
         } else {
             if b == 2 {
-                stop = count_line(open_file(FILE).unwrap()) as i32;
+                stop = max_line;
             } else {
                 panic!("input invalid !");
             }
