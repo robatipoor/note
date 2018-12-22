@@ -1,7 +1,7 @@
 # note-rs
 [![Crates.io](https://img.shields.io/crates/v/pf.svg?style=plastic)](http://crates.io/crates/note-rs)
 [![Build Status](https://travis-ci.org/robatipoor/note-rs.svg?branch=master)](https://travis-ci.org/robatipoor/note-rs)
-[![Build status](https://ci.appveyor.com/api/projects/status/d2we8j2c58n6wq7o?svg=true)](https://ci.appveyor.com/project/robatipoor/note-rs)
+[![Build status](https://ci.appveyor.com/api/projects/status/fqepq90uodd1muq6?svg=true)](https://ci.appveyor.com/project/robatipoor/note-rs)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 note in command line
