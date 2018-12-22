@@ -199,10 +199,6 @@ fn count_line(file: File) -> usize {
     let f: BufReader<File> = BufReader::new(file);
     f.lines().count()
 }
-#[cfg(target_os = "windows")]
-fn note_path_file() -> PathBuf {
-    dirs::home_dir().unwrap().join(Path::new("note"))
-}
 
 fn note_path_file() -> PathBuf {
     dirs::home_dir().unwrap().join(Path::new(".note"))
