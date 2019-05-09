@@ -17,11 +17,13 @@ endif
 build:
 	cargo build --release 
 	strip target/release/note-rs
-	upx target/release/note-rs 
+ifdef UPX
+		upx target/release/note-rs
+endif
 
 .PHONY: run
 run:
-	cargo run
+	cargo run --release -- $(ARGS)
 
 .PHONY: install
 install:
