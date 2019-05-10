@@ -9,8 +9,8 @@ pub enum Input<T> {
 
 #[derive(Debug)]
 pub enum SubCommand {
-    Delete(Input<u32>),
-    Read(Input<u32>),
+    Delete(Input<usize>),
+    Read(Input<usize>),
     Write(String),
     None,
 }
@@ -63,14 +63,14 @@ impl SubCommand {
         sub
     }
 
-    fn parse_range_str(input: &str) -> Option<Input<u32>> {
-        match input.trim().parse::<u32>() {
+    fn parse_range_str(input: &str) -> Option<Input<usize>> {
+        match input.trim().parse::<usize>() {
             Ok(o) => return Some(Input::Number(o)),
             Err(_) => {
-                let v: Vec<u32> = input
+                let v: Vec<usize> = input
                     .split("..")
                     .filter(|x| x.len() > 0)
-                    .map(|x| x.trim().parse::<u32>().unwrap())
+                    .map(|x| x.trim().parse::<usize>().unwrap())
                     .collect();
                 if v.len() == 2 {
                     Some(Input::RangeNumber(

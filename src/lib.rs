@@ -1,12 +1,8 @@
-
-extern crate colored;
-
-
-pub mod file;
-pub mod note;
+pub(crate) mod file;
+pub(crate) mod note;
 
 #[cfg(test)]
-pub mod test;
+pub(crate) mod test;
 
-pub use file::FileHandler;
+pub(crate) use file::FileHandler;
 pub use note::*;
