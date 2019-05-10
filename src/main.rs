@@ -4,8 +4,8 @@ extern crate clap;
 mod cli;
 use cli::*;
 use note_rs::*;
-// use std::io::{self, BufRead};
 use std::path::{Path, PathBuf};
+// use std::io::{self, BufRead};
 
 fn main() {
     let note = Notes::new(note_file());
