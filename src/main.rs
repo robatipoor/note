@@ -4,8 +4,7 @@ extern crate clap;
 mod cli;
 use cli::*;
 use note_rs::*;
-use std::io;
-use std::io::BufRead;
+// use std::io::{self, BufRead};
 use std::path::{Path, PathBuf};
 
 fn main() {
@@ -21,7 +20,7 @@ fn main() {
         SubCommand::Delete(d) => match d {
             Input::Number(n) => println!("{:?}", note.delete_line(n).flush()),
             Input::RangeNumber(r) => println!("{:?}", note.delete_range_lines(r).flush()),
-        }
+        },
         SubCommand::None => {
             note.print_all_lines();
         }
