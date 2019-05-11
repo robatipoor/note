@@ -1,28 +1,29 @@
 use clap::{App, Arg, ArgMatches};
-use std::ops::Range;
+use std::ops::RangeInclusive;
 
 #[derive(Debug)]
 pub enum Input<T> {
     Number(T),
-    RangeNumber(Range<T>),
+    RangeNumber(RangeInclusive<T>),
 }
 
 #[derive(Debug)]
-pub enum SubCommand {
+pub enum AppArgs {
     Delete(Input<usize>),
     Read(Input<usize>),
     Write(String),
+    Print,
     None,
 }
 
-impl Default for SubCommand {
+impl Default for AppArgs {
     fn default() -> Self {
-        SubCommand::None
+        AppArgs::None
     }
 }
 
-impl SubCommand {
-    pub fn get() -> SubCommand {
+impl AppArgs {
+    pub fn get() -> AppArgs {
         let matches: ArgMatches = App::new(crate_name!())
             .version(crate_version!())
             .author(crate_authors!())
@@ -51,14 +52,23 @@ impl SubCommand {
                     .help("Sets a line number")
                     .takes_value(true),
             )
+            .arg(
+                Arg::with_name("print")
+                    .short("p")
+                    .long("print")
+                    .help("Print all notes")
+                    .takes_value(false),
+            )
             .get_matches();
-        let mut sub = SubCommand::default();
+        let mut sub = AppArgs::default();
         if let Some(r) = matches.value_of("read") {
-            sub = SubCommand::Read(SubCommand::parse_range_str(r).unwrap());
+            sub = AppArgs::Read(AppArgs::parse_range_str(r).unwrap());
         } else if let Some(w) = matches.value_of("write") {
-            sub = SubCommand::Write(w.to_owned());
+            sub = AppArgs::Write(w.to_owned());
         } else if let Some(d) = matches.value_of("delete") {
-            sub = SubCommand::Delete(SubCommand::parse_range_str(d).unwrap());
+            sub = AppArgs::Delete(AppArgs::parse_range_str(d).unwrap());
+        } else if matches.is_present("print") {
+            sub = AppArgs::Print;
         }
         sub
     }
@@ -74,7 +84,7 @@ impl SubCommand {
                     .collect();
                 if v.len() == 2 {
                     Some(Input::RangeNumber(
-                        v.get(0).unwrap().clone()..v.get(1).unwrap().clone(),
+                        v.get(0).unwrap().clone()..=v.get(1).unwrap().clone(),
                     ))
                 } else {
                     None
