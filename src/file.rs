@@ -7,6 +7,7 @@ pub struct FileHandler {
 }
 
 impl FileHandler {
+    
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         FileHandler {
             path: path.as_ref().to_path_buf(),
@@ -27,5 +28,12 @@ impl FileHandler {
         let mut file: File = File::create(&self.path)?;
         file.write_all(s.as_bytes())?;
         Ok(())
+    }
+    
+    pub fn count_line(&self) -> usize {
+        let mut buffer = String::new();
+        let mut file: File = File::open(&self.path).unwrap();
+        file.read_to_string(&mut buffer).unwrap();
+        buffer.lines().count()
     }
 }

@@ -15,7 +15,7 @@ fn get_range_lines_test() {
         let note = Notes::new(p)
             .append_line("hi")
             .append_line("bye")
-            .get_range_lines(0..=1);
+            .get_range_lines(0..2);
         assert_eq!(note, "hi\nbye\n");
     });
 }
@@ -28,7 +28,7 @@ fn delete_range_lines_test() {
             .append_line("bye")
             .append_line("how")
             .append_line("get")
-            .delete_range_lines(0..=1);
+            .delete_range_lines(0..2);
         assert_eq!(note.count_lines(), 2);
         assert_eq!(note.get_line(0), "how");
     })

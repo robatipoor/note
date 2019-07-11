@@ -1,6 +1,6 @@
 [package]
 name = "note-rs"
-version = "0.1.1"
+version = "0.2.0"
 description = "note in cmd"
 homepage = "https://github.com/robatipoor/note-rs"
 keywords = ["note", "wite","text"]
@@ -11,5 +11,5 @@ edition = "2018"
 
 [dependencies]
 colored = "1.8.0"
-dirs = "1.0.5"
+dirs = "2.0.1"
 clap = "2.33.0"

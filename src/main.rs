@@ -9,7 +9,7 @@ use std::path::{Path, PathBuf};
 use std::process::exit;
 
 fn main() {
-    let note = Notes::new(note_file());
+    let note = Notes::new(note_file_path());
     match AppArgs::get() {
         AppArgs::Read(i) => {
             match i {
@@ -44,6 +44,6 @@ fn main() {
     }
 }
 
-fn note_file() -> PathBuf {
+fn note_file_path() -> PathBuf {
     dirs::home_dir().unwrap().join(Path::new(".note"))
 }

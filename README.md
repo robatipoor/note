@@ -30,13 +30,13 @@ git, rustc, cargo, gnu make, binutils, upx
 
 ```sh
 # write note 
-$ note-rs hello 
+$ note hello 
 # read all note 
-$ note-rs 
+$ note 
 # read line 1 
-$ note-rs -r 1
+$ note -r 1
 # read line 1 until the 10
-$ note-rs -r 1..10
+$ note -r 1..10
 # delete note line 2
-$ note-rs -d 2 
+$ note -d 2 
 ```

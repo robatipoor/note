@@ -1,10 +1,10 @@
 use clap::{App, Arg, ArgMatches};
-use std::ops::RangeInclusive;
+use std::ops::Range;
 
 #[derive(Debug)]
 pub enum Input<T> {
     Number(T),
-    RangeNumber(RangeInclusive<T>),
+    RangeNumber(Range<T>),
 }
 
 #[derive(Debug)]
@@ -73,23 +73,30 @@ impl AppArgs {
         sub
     }
 
-    fn parse_range_str(input: &str) -> Option<Input<usize>> {
-        match input.trim().parse::<usize>() {
-            Ok(o) => return Some(Input::Number(o)),
-            Err(_) => {
-                let v: Vec<usize> = input
-                    .split("..")
-                    .filter(|x| x.len() > 0)
-                    .map(|x| x.trim().parse::<usize>().unwrap())
-                    .collect();
-                if v.len() == 2 {
-                    Some(Input::RangeNumber(
-                        v.get(0).unwrap().clone()..=v.get(1).unwrap().clone(),
-                    ))
-                } else {
-                    None
-                }
+    fn parse_range_str(pattern: &str) -> Option<Input<usize>> {
+        if pattern.contains("..") {
+            let eq_sign = pattern.contains("=");
+            let mut pattern = String::from(pattern);
+            if eq_sign {
+                pattern.remove(pattern.find("=").unwrap());
             }
+            let s: Vec<&str> = pattern
+                .split("..")
+                .into_iter()
+                .filter_map(|x| if x == "" { None } else { Some(x) })
+                .collect::<Vec<&str>>();
+            if s.len() == 2 {
+                let start: usize = s[0].parse().unwrap();
+                let mut end: usize = s[1].parse().unwrap();
+                if eq_sign {
+                    end += 1;
+                }
+                Some(Input::RangeNumber(Range { start, end }))
+            } else {
+                None
+            }
+        } else {
+            Some(Input::Number(pattern.parse().unwrap()))
         }
     }
 }

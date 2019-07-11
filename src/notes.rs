@@ -1,7 +1,7 @@
 use crate::FileHandler;
 use colored::*;
 use std::iter::FromIterator;
-use std::ops::RangeInclusive;
+use std::ops::Range;
 use std::path::Path;
 
 pub struct Notes {
@@ -21,7 +21,7 @@ impl Notes {
         self.lines.remove(index);
         self
     }
-    pub fn delete_range_lines(mut self, range: RangeInclusive<usize>) -> Self {
+    pub fn delete_range_lines(mut self, range: Range<usize>) -> Self {
         self.lines.drain(range);
         self
     }
@@ -41,7 +41,7 @@ impl Notes {
     pub fn get_line(&self, index: usize) -> String {
         self.lines.get(index).unwrap().clone()
     }
-    pub fn get_range_lines(&self, range: RangeInclusive<usize>) -> String {
+    pub fn get_range_lines(&self, range: Range<usize>) -> String {
         Vec::from_iter(self.lines[range].iter().cloned())
             .into_iter()
             .map(|x| x + "\n")
