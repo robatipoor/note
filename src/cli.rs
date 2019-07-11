@@ -75,15 +75,14 @@ impl AppArgs {
 
     fn parse_range_str(pattern: &str) -> Option<Input<usize>> {
         if pattern.contains("..") {
-            let eq_sign = pattern.contains("=");
+            let eq_sign = pattern.contains('=');
             let mut pattern = String::from(pattern);
             if eq_sign {
-                pattern.remove(pattern.find("=").unwrap());
+                pattern.remove(pattern.find('=').unwrap());
             }
             let s: Vec<&str> = pattern
                 .split("..")
-                .into_iter()
-                .filter_map(|x| if x == "" { None } else { Some(x) })
+                .filter(|x| x != &"" )
                 .collect::<Vec<&str>>();
             if s.len() == 2 {
                 let start: usize = s[0].parse().unwrap();
